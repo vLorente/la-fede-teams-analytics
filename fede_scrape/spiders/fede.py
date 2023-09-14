@@ -18,7 +18,6 @@ class StaticValues(Enum):
     """
     COMPETICION = '379' # COMPETICIONES FBRM
     CATEGORIA = '1025' # 2ª Autonómica Masculina
-    DEFAULT_VALUE = '1'
 
 class FedeSpider(scrapy.Spider):
     """Spider for scraping https://www.fbrm.org/temporadas-anteriores"""
@@ -105,11 +104,7 @@ class FedeSpider(scrapy.Spider):
                 '__VIEWSTATE': viewstate,
                 '__VIEWSTATEGENERATOR': view_state_genetator,
                 '__EVENTVALIDATION': event_validation,
-                # Selector.TEMPORADAS.value: temporada_value,
-                # Selector.COMPETICION.value: StaticValues.COMPETICION.value,
-                # Selector.CATEGORIA.value: StaticValues.CATEGORIA.value,
                 Selector.FASE.value: option_value,
-                # Selector.GRUPO.value: '5186'
             }
 
             meta = {
@@ -163,10 +158,6 @@ class FedeSpider(scrapy.Spider):
                 '__VIEWSTATE': viewstate,
                 '__VIEWSTATEGENERATOR': view_state_genetator,
                 '__EVENTVALIDATION': event_validation,
-                # Selector.TEMPORADAS.value: temporada_value,
-                # Selector.COMPETICION.value: StaticValues.COMPETICION.value,
-                # Selector.CATEGORIA.value: StaticValues.CATEGORIA.value,
-                # Selector.FASE.value: fase_value,
                 Selector.GRUPO.value: option_value
             }
 
@@ -194,9 +185,7 @@ class FedeSpider(scrapy.Spider):
         """
 
         # Extrae metadata
-        temporada_value = response.meta['temporada_value']
-        temporada_text = response.meta['temporada_text']
-        fase_value = response.meta['fase_value']
-        fase_text = response.meta['fase_text']
-        grupo_text = response.meta['grupo_text']
-        print('\033[91m' + f'Temporada: {temporada_text}, Fase: {fase_text}, Grupo: {grupo_text}' + '\033[0m')
+        # temporada_text = response.meta['temporada_text']
+        # fase_text = response.meta['fase_text']
+        # grupo_text = response.meta['grupo_text']
+
