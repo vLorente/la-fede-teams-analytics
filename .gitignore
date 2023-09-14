@@ -1,2 +1,3 @@
 __pycache__/
 resources/data/html
+fede_scrape/spiders/dev_spider.py
