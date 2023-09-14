@@ -1,8 +1,10 @@
 """MAIN"""
+import os
 from fastapi import FastAPI
 import uvicorn
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from dotenv import load_dotenv
 from app.models import Base
 from app.database import engine
 from app.api.results import router as results_router
@@ -21,8 +23,11 @@ def main():
     process.start()
 
     # Inicia la aplicación FastAPI
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    host = os.getenv('HOST')
+    port = os.getenv('PORT')
+    uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == "__main__":
+    load_dotenv()
     main()

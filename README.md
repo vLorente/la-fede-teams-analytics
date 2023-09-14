@@ -39,5 +39,7 @@ scrapy genspider fede https://www.fbrm.org/temporadas-anteriores
 Ejecutar la "spider", hay que situarse en el directorio raiz "fede_scrape"
 
 ```bash
-scrapy crawl fede
+scrapy crawl results
 ```
+
+> Configuración de Pipelines para guardar datos ["Write items to a JSON lines file"](https://docs.scrapy.org/en/latest/topics/item-pipeline.html#write-items-to-a-json-lines-file)
