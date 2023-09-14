@@ -62,9 +62,9 @@ CONCURRENT_REQUESTS_PER_IP = 16
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "fede_scrape.pipelines.FedeScrapePipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "fede_scrape.pipelines.JsonWriterPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
