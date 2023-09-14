@@ -1,23 +1,6 @@
 """ Fede Spider """
-from enum import Enum
 import scrapy
-
-class Selector(Enum):
-    """ 
-    Selectores del formulario identificados por el campo "id"
-    """
-    TEMPORADAS = 'ctl00$contenedor_informacion$DDLTemporadas'
-    COMPETICION = 'ctl00$contenedor_informacion$DDLCompeticiones'
-    CATEGORIA = 'ctl00$contenedor_informacion$DDLCategorias'
-    FASE = 'ctl00$contenedor_informacion$DDLFases'
-    GRUPO = 'ctl00$contenedor_informacion$DDLGrupos'
-
-class StaticValues(Enum):
-    """ 
-    Valores estáticos para los selectores
-    """
-    COMPETICION = '379' # COMPETICIONES FBRM
-    CATEGORIA = '1025' # 2ª Autonómica Masculina
+from shared.enums import Selector, StaticValues, TableNames
 
 class FedeSpider(scrapy.Spider):
     """Spider for scraping https://www.fbrm.org/temporadas-anteriores"""
@@ -43,8 +26,6 @@ class FedeSpider(scrapy.Spider):
         for option in options:
             option_value = option.css('::attr(value)').get()
             option_text = option.css('::text').get()
-
-            print(f'Temporada: {option_text}, Valor: {option_value}')
 
             # Configurar el body del nuevo POST
             data = {
@@ -93,8 +74,6 @@ class FedeSpider(scrapy.Spider):
         for option in options:
             option_value = option.css('::attr(value)').get()
             option_text = option.css('::text').get()
-
-            print(f'Fase: {option_text}, Valor: {option_value}')
 
             # Configurar el body del nuevo POST
             data = {
@@ -148,8 +127,6 @@ class FedeSpider(scrapy.Spider):
             option_value = option.css('::attr(value)').get()
             option_text = option.css('::text').get()
 
-            print(f'Grupo: {option_text}, Valor: {option_value}')
-
             # Configurar el body del nuevo POST
             data = {
                 '__EVENTTARGET': Selector.GRUPO.value,
@@ -185,7 +162,22 @@ class FedeSpider(scrapy.Spider):
         """
 
         # Extrae metadata
-        # temporada_text = response.meta['temporada_text']
-        # fase_text = response.meta['fase_text']
-        # grupo_text = response.meta['grupo_text']
+        temporada_text = response.meta['temporada_text']
+        fase_text = response.meta['fase_text']
+        grupo_text = response.meta['grupo_text']
+
+        # Obtener tablas de datos
+        resultados = response.css(f'article[id="{TableNames.RESULTADOS.value}"]')
+        calendario = response.css(f'article[id="{TableNames.CALENDARIO.value}"]')
+        equipos = response.css(f'article[id="{TableNames.EQUIPOS.value}"]')
+
+        print(resultados)
+        print(calendario)
+        print(equipos)
+
+        yield {
+            'temporada': temporada_text,
+            'fase': fase_text,
+            'grupo': grupo_text,
+        }
 
