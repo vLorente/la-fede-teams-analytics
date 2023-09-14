@@ -1,11 +1,13 @@
-""" Fede Spider """
+""" Spider Results """
 import scrapy
 from shared.enums import Selector, StaticValues, TableNames
+from shared.functions import decode_html_script
 
-class FedeSpider(scrapy.Spider):
-    """Spider for scraping https://www.fbrm.org/temporadas-anteriores"""
+class ResultsSpider(scrapy.Spider):
+    """Spider for scraping https://www.fbrm.org/temporadas-anteriores
+    para obtener la tabla de resultados de cada temporada, fase y grupo"""
 
-    name = "fede"
+    name = "results"
     allowed_domains = ["www.fbrm.org"]
     start_urls = ["https://www.fbrm.org/temporadas-anteriores"]
     url = 'https://www.fbrm.org/temporadas-anteriores'
@@ -42,7 +44,6 @@ class FedeSpider(scrapy.Spider):
 
             meta = {
                 'temporada_text': option_text,
-                'temporada_value': option_value
             }
 
             # Realiza la solicitud POST
@@ -64,7 +65,6 @@ class FedeSpider(scrapy.Spider):
         view_state_genetator = response.css('#__VIEWSTATEGENERATOR::attr(value)').get() or ''
 
         # Extrae metadata
-        temporada_value = response.meta['temporada_value']
         temporada_text = response.meta['temporada_text']
 
         # Extrae todas las opciones del selector de Temporada
@@ -88,9 +88,7 @@ class FedeSpider(scrapy.Spider):
 
             meta = {
                 'temporada_text': temporada_text,
-                'temporada_value': temporada_value,
                 'fase_text': option_text,
-                'fase_value': option_value
             }
 
             # Realiza la solicitud POST
@@ -114,9 +112,7 @@ class FedeSpider(scrapy.Spider):
         view_state_genetator = response.css('#__VIEWSTATEGENERATOR::attr(value)').get() or ''
 
         # Extrae metadata
-        temporada_value = response.meta['temporada_value']
         temporada_text = response.meta['temporada_text']
-        fase_value = response.meta['fase_value']
         fase_text = response.meta['fase_text']
 
         # Extrae todas las opciones del selector de Temporada
@@ -140,11 +136,8 @@ class FedeSpider(scrapy.Spider):
 
             meta = {
                 'temporada_text': temporada_text,
-                'temporada_value': temporada_value,
                 'fase_text': fase_text,
-                'fase_value': fase_value,
                 'grupo_text': option_text,
-                'grupo_value': option_value
             }
 
             # Realiza la solicitud POST
@@ -161,23 +154,37 @@ class FedeSpider(scrapy.Spider):
         Obtención y almacenamiento de los datos.
         """
 
-        # Extrae metadata
-        temporada_text = response.meta['temporada_text']
-        fase_text = response.meta['fase_text']
-        grupo_text = response.meta['grupo_text']
-
-        # Obtener tablas de datos
+        # Obtener resultados
         resultados = response.css(f'article[id="{TableNames.RESULTADOS.value}"]')
-        calendario = response.css(f'article[id="{TableNames.CALENDARIO.value}"]')
-        equipos = response.css(f'article[id="{TableNames.EQUIPOS.value}"]')
+        table = resultados.xpath(
+            './/table[thead/tr/th[text()="N°" and following-sibling::th[1][text()="Nombre"]]]')
 
-        print(resultados)
-        print(calendario)
-        print(equipos)
+        #TODO: Cabeceras dinámicas
+        # Selecciona todas las filas de la tabla
+        # heads = table.css('thead tr')
 
-        yield {
-            'temporada': temporada_text,
-            'fase': fase_text,
-            'grupo': grupo_text,
-        }
+        rows = table.css('tbody tr')
+        for row in rows:
+            # Encuentra el script dentro del artículo que contiene el valor codificado
+            position = decode_html_script(row.xpath('.//td[1]/script').get())
+            team = decode_html_script(row.xpath('.//td[2]//script').get())
+            matches_played = decode_html_script(row.xpath('.//td[3]//script').get())
+            win = decode_html_script(row.xpath('.//td[4]//script').get())
+            lose = decode_html_script(row.xpath('.//td[5]//script').get())
+            scored = decode_html_script(row.xpath('.//td[6]//script').get())
+            against = decode_html_script(row.xpath('.//td[7]//script').get())
+            points = decode_html_script(row.xpath('.//td[8]//script').get())
 
+            yield {
+                'season': response.meta['temporada_text'], 
+                'phase': response.meta['fase_text'],
+                'group': response.meta['grupo_text'],
+                'position': position, # Posición en la clasificación
+                'team': team,
+                'matches_played': matches_played, # Partidos totales
+                'win': win, # Victorias
+                'lose': lose, # Derrotas
+                'scored': scored, # Puntos a favor
+                'against': against, # Puntos en contra
+                'points': points # Puntos en la clasificación             
+            }
