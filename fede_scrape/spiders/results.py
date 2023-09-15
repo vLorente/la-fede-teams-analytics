@@ -159,10 +159,6 @@ class ResultsSpider(scrapy.Spider):
         table = resultados.xpath(
             './/table[thead/tr/th[text()="N°" and following-sibling::th[1][text()="Nombre"]]]')
 
-        #TODO: Cabeceras dinámicas
-        # Selecciona todas las filas de la tabla
-        # heads = table.css('thead tr')
-
         rows = table.css('tbody tr')
         for row in rows:
             # Encuentra el script dentro del artículo que contiene el valor codificado
@@ -176,11 +172,11 @@ class ResultsSpider(scrapy.Spider):
             points = decode_html_script(row.xpath('.//td[8]//script').get())
 
             yield {
-                'season': response.meta['temporada_text'], 
-                'phase': response.meta['fase_text'],
-                'group': response.meta['grupo_text'],
+                'season': response.meta['temporada_text'].strip(), 
+                'phase': response.meta['fase_text'].strip(),
+                'group': response.meta['grupo_text'].strip(),
                 'position': position, # Posición en la clasificación
-                'team': team,
+                'team': team.strip(),
                 'matches_played': matches_played, # Partidos totales
                 'win': win, # Victorias
                 'lose': lose, # Derrotas

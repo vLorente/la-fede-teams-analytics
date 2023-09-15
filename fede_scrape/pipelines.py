@@ -3,13 +3,10 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
-import os
 import json
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from app.models import Result
-from app.database import engine
+from app.database import SessionLocal
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
@@ -30,7 +27,7 @@ class SqlitePipeline:
     """SQLite Insert Pipeline"""
     def __init__(self):
         load_dotenv()
-        self.session = sessionmaker(bind=engine)()
+        self.session = SessionLocal()
 
     def close_spider(self, spider):
         self.session.commit()
