@@ -14,6 +14,16 @@ sudo apt install pipenv
 pipenv install
 ```
 
+### Iniciar Servicio Web
+
+Si existe la base de datos y contiene algún registro, no se regenera la ejecución del
+web scraping, en caso de querer regenerar la información eliminar la información de
+la tabla que se desee regenerar.
+
+```bash
+python3 main.py
+```
+
 ## Web Scraping
 
 Obtener los datos de la página de la [Federación de baloncesto de la Región de Murcia](https://www.fbrm.org/temporadas-anteriores).
