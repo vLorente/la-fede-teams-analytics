@@ -61,3 +61,4 @@ Fast API provee de forma automática de documentación sobre la API desde (en es
 
 >localhost:8000/docs
 
+![FastAPI Docs Example](resources/images/fastapidocs.png)
