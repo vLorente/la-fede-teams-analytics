@@ -21,6 +21,7 @@ web scraping, en caso de querer regenerar la informaci√≥n eliminar la informaci√
 la tabla que se desee regenerar.
 
 ```bash
+pipenv shell
 python3 main.py
 ```
 
