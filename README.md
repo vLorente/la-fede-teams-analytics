@@ -5,7 +5,7 @@
 ### Instalación de dependencias
 
 ```bash
-sudo apt install pipenv
+sudo apt install pipenv sqlite3
 ```
 
 ### Configuración del entorno virtual
