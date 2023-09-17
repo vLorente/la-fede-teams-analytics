@@ -54,3 +54,10 @@ scrapy crawl results
 ```
 
 > Configuración de Pipelines para guardar datos ["Write items to a JSON lines file"](https://docs.scrapy.org/en/latest/topics/item-pipeline.html#write-items-to-a-json-lines-file)
+
+## Fast API
+
+Fast API provee de forma automática de documentación sobre la API desde (en este caso localhost):
+
+>localhost:8000/docs
+
