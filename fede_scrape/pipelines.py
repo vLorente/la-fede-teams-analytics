@@ -5,7 +5,7 @@
 
 import json
 from dotenv import load_dotenv
-from app.models import Result
+from app.models import Result, Team
 from app.database import SessionLocal
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
@@ -36,6 +36,10 @@ class SqlitePipeline:
     def insert_result(self, data, table):
         if table == 'results':
             result = Result(**data)
+            self.session.add(result)
+            
+        if table == 'teams':
+            result = Team(**data)
             self.session.add(result)
 
     def process_item(self, item, spider):

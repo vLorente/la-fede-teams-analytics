@@ -1,4 +1,4 @@
-"""Fast API Endpoints"""
+"""Fast API Results Endpoints"""
 from fastapi import APIRouter
 from app.database import SessionLocal
 from app.selectors.results import search_results
