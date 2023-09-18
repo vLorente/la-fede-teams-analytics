@@ -1,8 +1,6 @@
-"""Modelos SQL Alchemy"""
+"""Sql Alchemy Model Result"""
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from app.database import Base
 
 class Result(Base):
     """Modelo Tabla Resutls"""
@@ -21,16 +19,3 @@ class Result(Base):
     scored = Column(Integer)
     against = Column(Integer)
     points = Column(Integer)
-
-
-class Team(Base):
-    """Modelo Tabla Teams"""
-
-    __tablename__ = 'teams'
-
-    id = Column(Integer, primary_key=True)
-    season = Column(String)
-    team = Column(String)
-    location = Column(String)
-    color_home = Column(String)
-    color_visitor = Column(String)

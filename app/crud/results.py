@@ -1,10 +1,10 @@
 """Selectores genéricos para el modelo Result"""
 
 from sqlalchemy.orm import Session
-from app.models import Result
+from app.models.result import Result
 
 
-def search_results(session: Session, filters=None, limit=None):
+def search_results(db: Session, filters=None, limit=None):
     """
     Realiza una búsqueda de resultados basada en filtros proporcionados.
 
@@ -17,7 +17,7 @@ def search_results(session: Session, filters=None, limit=None):
     Returns:
         List[Result]: Lista de resultados que coinciden con los filtros.
     """
-    query = session.query(Result)
+    query = db.query(Result)
 
     if filters:
         for key, value in filters.items():
@@ -30,3 +30,28 @@ def search_results(session: Session, filters=None, limit=None):
 
     results = query.all()
     return results
+
+def create_result(db: Session, result: Result):
+    """Crea nuevo result
+
+    Args:
+        db (Session): conexión con base de datos
+        result (Result): Nuevo Result
+    """
+    db_result = Result(
+        season=result.season,
+        team=result.team,
+        phase=result.phase,
+        group=result.group,
+        position=result.position,
+        matches_played=result.matches_played,
+        win=result.win,
+        lose=result.lose,
+        scored=result.scored,
+        against=result.against,
+        points=result.points
+    )
+    db.add(db_result)
+    db.commit()
+    db.refresh(db_result)
+    return db_result

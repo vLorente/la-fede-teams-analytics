@@ -3,3 +3,4 @@ resources/data/html
 fede_scrape/spiders/dev_spider.py
 # .env
 resources/data/dev.jsonl
+.pytest_cache

@@ -1,7 +1,7 @@
 """Fast API Results Endpoints"""
 from fastapi import APIRouter
 from app.database import SessionLocal
-from app.selectors.results import search_results
+from app.crud.results import search_results
 
 router = APIRouter()
 session = SessionLocal()
@@ -11,7 +11,7 @@ async def get_results():
     result = search_results(session)
     return result
 
-@router.get('/{team}')
+@router.get('/team/{team}')
 async def get_team(team: str):
     filters = {
         'team': team,
@@ -19,7 +19,7 @@ async def get_team(team: str):
     result = search_results(session, filters=filters)
     return result
 
-@router.get('/{season}')
+@router.get('/season/{season}')
 async def get_season(season: str):
     filters = {
         'season': season,
