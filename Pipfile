@@ -12,9 +12,9 @@ pylint = "2.17"
 sqlalchemy = "2.0"
 httpx = "*"
 pytest = "*"
+python-dotenv = "*"
 
 [dev-packages]
-python-dotenv = "*"
 
 [requires]
 python_version = "3.10"
