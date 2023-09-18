@@ -1,7 +1,7 @@
 """Selectores genéricos para el modelo Team"""
 
 from sqlalchemy.orm import Session
-from app.models import Team
+from app.models.team import Team
 
 
 def search_teams(session: Session, filters=None, limit=None):

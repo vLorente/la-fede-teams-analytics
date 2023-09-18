@@ -1,18 +1,11 @@
-"""MAIN"""
-import os
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+"""Main"""
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-from dotenv import load_dotenv
-from app.models import Base
 from app.database import engine
-from app.api.results import router as results_router
-from app.api.teams import router as teams_router
-from app.database import SessionLocal
+from app.main import run_api
 from app.selectors.results import search_results
 from app.selectors.teams import search_teams
+from app.database import SessionLocal, Base
 
 def scraping_web():
     """
@@ -37,46 +30,9 @@ def scraping_web():
         process.crawl('teams')
         process.start()
 
+
 def main():
-    """Main execution"""
-    load_dotenv()
-
-
-    api_description = """
-    ## EndPoints
-
-    * Resultados de temporadas anteriores
-    * Información sobre los equipos por temporada
-    * **Calendarios de temporadas anteriores** (_not implemented_).
-    """
-
-    app = FastAPI(
-        title="LaFedeAPI",
-        summary='LA FEDE API: obtén información sobre 2ª Autonómica Masculina.',
-        description=api_description,
-        version="0.0.1",
-        contact={
-            "name": "Valentín Lorente Jiménez",
-            "url": "https://github.com/vLorente",
-            "email": "vlorentejimenez@gmail.com",
-        },
-    )
-
-    # Configuración de CORS
-    origins = [
-        "http://localhost",
-        "http://localhost:8000",
-    ]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-    app.include_router(results_router, prefix="/results", tags=["results"])
-    app.include_router(teams_router, prefix="/teams", tags=["teams"])
+    """Ejecución principal"""
 
     # Crea las tablas en la base de datos (si no existen)
     Base.metadata.create_all(bind=engine)
@@ -84,10 +40,8 @@ def main():
     # Carga de datos desde el scraping web
     scraping_web()
 
-    # Inicia la aplicación FastAPI
-    host = os.getenv('HOST')
-    port = int(os.getenv('PORT'))
-    uvicorn.run(app, host=host, port=port)
+    # Arrancar el servicio web
+    run_api()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

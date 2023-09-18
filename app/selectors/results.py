@@ -1,7 +1,7 @@
 """Selectores genéricos para el modelo Result"""
 
 from sqlalchemy.orm import Session
-from app.models import Result
+from app.models.result import Result
 
 
 def search_results(session: Session, filters=None, limit=None):
