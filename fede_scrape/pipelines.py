@@ -5,8 +5,8 @@
 
 import json
 from dotenv import load_dotenv
-from app.models.result import Result 
-from app.models.team import Team 
+from app.models.result import Result
+from app.models.team import Team
 from app.database import SessionLocal
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter

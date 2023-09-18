@@ -11,6 +11,7 @@ scrapy = "2.10"
 pylint = "2.17"
 sqlalchemy = "2.0"
 httpx = "*"
+pytest = "*"
 
 [dev-packages]
 python-dotenv = "*"
