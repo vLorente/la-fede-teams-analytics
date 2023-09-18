@@ -1,10 +1,13 @@
 """Main"""
+import os
+import uvicorn
+from dotenv import load_dotenv
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from app.database import engine
-from app.main import run_api
-from app.selectors.results import search_results
-from app.selectors.teams import search_teams
+from app.main import app
+from app.crud.results import search_results
+from app.crud.teams import search_teams
 from app.database import SessionLocal, Base
 
 def scraping_web():
@@ -17,18 +20,16 @@ def scraping_web():
     process = CrawlerProcess(get_project_settings())
     # Check para results
     results = search_results(session, limit=1)
-
     if not results:
         # Obtener la información del Scraping
         process.crawl('results')
-        process.start()
 
     # Check para teams
     results = search_teams(session, limit=1)
     if not results:
         # Obtener la información del Scraping
         process.crawl('teams')
-        process.start()
+    process.start()
 
 
 def main():
@@ -40,8 +41,11 @@ def main():
     # Carga de datos desde el scraping web
     scraping_web()
 
-    # Arrancar el servicio web
-    run_api()
+    # Arrancar la API
+    load_dotenv()
+    host = os.getenv('HOST')
+    port = int(os.getenv('PORT'))
+    uvicorn.run(app, host=host, port=port)
 
 if __name__ == '__main__':
     main()
