@@ -15,6 +15,7 @@ pytest = "*"
 python-dotenv = "*"
 pandas = "*"
 notebook = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
